@@ -1,0 +1,386 @@
+/* HAICA Design System — tokens, states, and component primitives */
+
+:root {
+  --haica-focus: #BA2227;
+  --haica-focus-ring: rgba(186, 34, 39, 0.22);
+  --haica-success: #16a34a;
+  --haica-success-bg: #f0fdf4;
+  --haica-success-border: #bbf7d0;
+  --haica-warning: #d97706;
+  --haica-warning-bg: #fffbeb;
+  --haica-warning-border: #fde68a;
+  --haica-error: #BA2227;
+  --haica-error-bg: #fef2f2;
+  --haica-error-border: #fecaca;
+  --haica-surface: #ffffff;
+  --haica-surface-alt: #f8fafc;
+  --haica-border: #e2e8f0;
+  --haica-text: #0f172a;
+  --haica-text-muted: #64748b;
+  --haica-transition: 200ms ease;
+}
+
+.dark {
+  --haica-success-bg: rgba(22, 163, 74, 0.12);
+  --haica-success-border: rgba(22, 163, 74, 0.35);
+  --haica-warning-bg: rgba(217, 119, 6, 0.12);
+  --haica-warning-border: rgba(217, 119, 6, 0.35);
+  --haica-error-bg: rgba(186, 34, 39, 0.12);
+  --haica-error-border: rgba(186, 34, 39, 0.35);
+  --haica-surface: #1e293b;
+  --haica-surface-alt: #0f172a;
+  --haica-border: #334155;
+  --haica-text: #f8fafc;
+  --haica-text-muted: #94a3b8;
+}
+
+@layer components {
+  /* ── Focus / keyboard nav ── */
+  .haica-focus-ring:focus-visible {
+    outline: 2px solid var(--haica-focus);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px var(--haica-focus-ring);
+  }
+
+  /* ── Alerts (error / success / warning) ── */
+  .alert {
+    @apply flex items-start gap-2.5 rounded-xl border-r-4 p-3 text-sm font-bold transition-colors duration-200;
+  }
+
+  .alert__icon {
+    @apply mt-0.5 shrink-0 text-base leading-none;
+  }
+
+  .alert--error {
+    border-color: var(--haica-error);
+    background: var(--haica-error-bg);
+    color: var(--haica-error);
+  }
+
+  .alert--success {
+    border-color: var(--haica-success);
+    background: var(--haica-success-bg);
+    color: var(--haica-success);
+  }
+
+  .alert--warning {
+    border-color: var(--haica-warning);
+    background: var(--haica-warning-bg);
+    color: var(--haica-warning);
+  }
+
+  /* ── Buttons (hover / active / disabled) ── */
+  .btn {
+    position: relative;
+    overflow: hidden;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 font-bold transition-all duration-200 haica-focus-ring;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 0%;
+    opacity: 0;
+    transition: none;
+    pointer-events: none;
+  }
+
+  .btn:active::after {
+    animation: ripple 0.4s ease-out;
+  }
+
+  @keyframes ripple {
+    from {
+      background-size: 0%;
+      opacity: 1;
+    }
+    to {
+      background-size: 400%;
+      opacity: 0;
+    }
+  }
+
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-50;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .btn--primary {
+    @apply h-11 bg-haica-red text-white shadow-md;
+  }
+
+  .btn--primary:hover:not(:disabled) {
+    @apply bg-[#8B1A1E];
+    transform: translateY(-1px);
+  }
+
+  .btn--primary:active:not(:disabled) {
+    transform: scale(0.98);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn--secondary {
+    @apply h-11 border-2 border-[#dfe5ec] bg-white text-slate-700;
+  }
+
+  .dark .btn--secondary {
+    @apply border-slate-700 bg-[#1E293B] text-slate-200;
+  }
+
+  .btn--secondary:hover:not(:disabled) {
+    @apply bg-slate-50;
+  }
+
+  .dark .btn--secondary:hover:not(:disabled) {
+    @apply bg-slate-800;
+  }
+
+  /* ── Spinner ── */
+  .spinner {
+    @apply inline-block h-5 w-5 animate-spin rounded-full border-2 border-current border-r-transparent;
+  }
+
+  .spinner--lg {
+    @apply h-8 w-8 border-[3px];
+  }
+
+  /* ── Data table ── */
+  .data-table-wrap {
+    @apply overflow-x-auto rounded-xl border border-[#e2e8f0]/80 dark:border-slate-800;
+  }
+
+  .data-table-wrap table.data-table {
+    min-width: 640px;
+    width: 100%;
+  }
+
+  .sticky-checkbox {
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    background: inherit;
+  }
+
+  thead .sticky-checkbox {
+    background: #f8fafc;
+  }
+
+  .dark thead .sticky-checkbox {
+    background: #0F172A;
+  }
+
+  .dark tbody .sticky-checkbox {
+    background: #1E293B;
+  }
+
+  tbody tr:hover .sticky-checkbox {
+    background: rgba(186, 34, 39, 0.04);
+  }
+
+  .dark tbody tr:hover .sticky-checkbox {
+    background: rgba(186, 34, 39, 0.08);
+  }
+
+  @media (max-width: 640px) {
+    .sticky-checkbox {
+      position: static;
+    }
+  }
+
+  .data-table {
+    @apply w-full min-w-[620px] border-collapse text-right text-sm;
+  }
+
+  .data-table thead {
+    @apply bg-slate-50 dark:bg-[#0F172A];
+  }
+
+  .data-table th {
+    @apply border-b border-slate-200 p-3 text-sm font-bold text-slate-700 dark:border-slate-800 dark:text-slate-300;
+  }
+
+  .data-table td {
+    @apply border-b border-slate-100 p-3 align-middle text-slate-600 transition-colors duration-150 dark:border-slate-800 dark:text-slate-300;
+  }
+
+  .data-table tbody tr:hover td,
+  .row-hover:hover td {
+    @apply bg-slate-50/70 dark:bg-slate-800/30;
+  }
+
+  .data-table tbody tr:nth-child(even) td {
+    @apply bg-slate-50/30 dark:bg-slate-900/20;
+  }
+
+  /* ── Status badge (color + icon + stripe for colorblind) ── */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold;
+    border-left-width: 4px;
+  }
+
+  .status-badge--active {
+    @apply border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400;
+  }
+
+  .status-badge--suspended {
+    @apply border-orange-500 bg-orange-50 text-orange-600 dark:bg-orange-950/20 dark:text-orange-400;
+  }
+
+  .status-badge--banned {
+    @apply border-haica-red bg-red-50 text-haica-red dark:bg-red-950/20;
+  }
+
+  .status-badge--deleted {
+    @apply border-slate-400 bg-slate-100 text-slate-600 dark:bg-slate-700/30 dark:text-slate-400;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    @apply flex flex-col items-center justify-center p-12 text-center;
+  }
+
+  .empty-state__icon {
+    @apply mb-4 grid h-20 w-20 place-items-center rounded-full bg-slate-100 text-4xl text-slate-300 dark:bg-slate-800 dark:text-slate-600;
+  }
+
+  .empty-state__title {
+    @apply text-base font-bold text-slate-700 dark:text-slate-200;
+  }
+
+  .empty-state__desc {
+    @apply mt-1 max-w-xs text-xs text-slate-400 dark:text-slate-500;
+  }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm;
+    animation: fadeIn 200ms ease both;
+  }
+
+  .modal-panel {
+    @apply w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_60px_rgba(15,35,55,0.2)] dark:border-slate-700 dark:bg-[#1E293B];
+    animation: authIn 280ms ease both;
+  }
+
+  .modal-header {
+    @apply mb-4 flex items-start justify-between gap-3;
+  }
+
+  .modal-title {
+    @apply text-lg font-bold text-slate-800 dark:text-white;
+  }
+
+  .modal-close {
+    @apply grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 transition-colors haica-focus-ring hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white;
+  }
+
+  .modal-body {
+    @apply text-sm leading-relaxed text-slate-600 dark:text-slate-300;
+  }
+
+  .modal-footer {
+    @apply mt-6 flex justify-end gap-3;
+  }
+
+  /* ── Tooltip ── */
+  .tooltip-wrap {
+    @apply relative inline-flex;
+  }
+
+  .tooltip-bubble {
+    @apply pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-800 px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition-all duration-200;
+  }
+
+  .tooltip-bubble::after {
+    content: '';
+    @apply absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-slate-800;
+  }
+
+  .tooltip-wrap:hover .tooltip-bubble,
+  .tooltip-wrap:focus-within .tooltip-bubble {
+    @apply opacity-100;
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  /* ── Dropdown ── */
+  .dropdown {
+    @apply relative inline-block;
+  }
+
+  .dropdown-trigger {
+    @apply haica-focus-ring;
+  }
+
+  .dropdown-menu {
+    @apply absolute left-0 top-full z-30 mt-1 min-w-[180px] overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-[0_12px_32px_rgba(15,35,55,0.14)] dark:border-slate-700 dark:bg-[#1E293B];
+    animation: authIn 180ms ease both;
+  }
+
+  .dropdown-item {
+    @apply flex w-full items-center gap-2 px-4 py-2.5 text-right text-sm font-bold text-slate-700 transition-colors haica-focus-ring hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800;
+  }
+
+  .dropdown-item--danger {
+    @apply text-haica-red hover:bg-red-50 dark:hover:bg-red-950/20;
+  }
+
+  .dropdown-item:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+
+  /* ── Mobile drawer ── */
+  .mobile-drawer {
+    @apply border-t border-white/10 bg-haica-navy px-4 py-4 md:hidden;
+    animation: slideDown 280ms ease both;
+  }
+
+  .mobile-drawer__item {
+    @apply mb-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-right text-base font-bold text-white transition-colors haica-focus-ring hover:bg-white/10 active:bg-white/15;
+  }
+
+  .mobile-drawer__item--active {
+    @apply bg-white/15 ring-1 ring-white/20;
+  }
+
+  .hamburger {
+    @apply relative flex h-12 w-12 flex-col items-center justify-center gap-1.5 rounded-xl border border-white/30 text-white transition-colors haica-focus-ring hover:bg-white/10 md:hidden;
+  }
+
+  .hamburger__bar {
+    @apply block h-0.5 w-6 bg-white transition-all duration-300;
+  }
+
+  .hamburger--open .hamburger__bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger--open .hamburger__bar:nth-child(2) {
+    @apply opacity-0;
+  }
+
+  .hamburger--open .hamburger__bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

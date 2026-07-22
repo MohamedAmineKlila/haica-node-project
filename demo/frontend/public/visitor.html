@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page de démonstration – HAICA</title>
+  <style>
+    :root { --bg:#0f172a; --card:#1e293b; --text:#e2e8f0; --accent:#38bdf8; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; align-items:center; justify-content:center; padding:1rem; }
+    .card { background:var(--card); border-radius:16px; padding:2rem; max-width:560px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.4); }
+    h1 { margin-top:0; font-size:1.5rem; }
+    p { line-height:1.6; color:#cbd5e1; }
+    .banner { background:#334155; border-left:4px solid var(--accent); padding:1rem; border-radius:8px; margin:1.5rem 0; font-size:.95rem; }
+    .actions { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.5rem; }
+    button { border:none; border-radius:8px; padding:.75rem 1.25rem; font-size:1rem; cursor:pointer; }
+    .accept { background:var(--accent); color:#0f172a; font-weight:600; }
+    .decline { background:transparent; color:#94a3b8; border:1px solid #475569; }
+    .result { margin-top:1.25rem; font-size:.9rem; color:#86efac; min-height:1.2em; }
+    a { color:var(--accent); }
+    details { margin-top:1.5rem; font-size:.9rem; }
+    details summary { cursor:pointer; color:#94a3b8; }
+    details p, details li { color:#cbd5e1; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Bienvenue sur la page de démonstration HAICA</h1>
+    <p>Cette page respecte votre vie privée. Aucune information n'est collectée sans votre accord explicite.</p>
+
+    <div class="banner">
+      <strong>Respect de la vie privée :</strong> Si vous acceptez, nous enregistrons votre adresse IP et le
+      type d'appareil utilisé (système, navigateur) à des fins de démonstration. Ces données sont conservées
+      de façon sécurisée. Vous pouvez refuser à tout moment – le refus n'a aucun impact sur l'affichage de la page.
+    </div>
+
+    <details>
+      <summary>Politique de confidentialité</summary>
+      <p><strong>Données collectées (avec consentement) :</strong></p>
+      <ul>
+        <li>Adresse IP (utilisée pour la localisation approximative)</li>
+        <li>Type d'appareil (mobile / ordinateur)</li>
+        <li>Navigateur et système d'exploitation</li>
+        <li>Page visitée et référent</li>
+        <li>Date et heure de la visite</li>
+      </ul>
+      <p><strong>Finalité :</strong> Démonstration technique uniquement.</p>
+      <p><strong>Base légale :</strong> Votre consentement explicite (Art. 6 RGPD / Loi 2004-63 en Tunisie).</p>
+      <p><strong>Vos droits :</strong> Vous pouvez demander l'accès, la rectification ou la suppression de vos
+      données en contactant l'administrateur. Aucune donnée n'est partagée avec des tiers.</p>
+    </details>
+
+    <div class="actions">
+      <button class="accept" id="acceptBtn">J'accepte</button>
+      <button class="decline" id="declineBtn">Je refuse</button>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:5000'
+      : ''
+
+    async function send(consent) {
+      const result = document.getElementById('result')
+      if (!consent) {
+        result.style.color = '#94a3b8'
+        result.textContent = 'Merci. Aucune information n\'a été enregistrée.'
+        document.getElementById('acceptBtn').disabled = true
+        document.getElementById('declineBtn').disabled = true
+        return
+      }
+      try {
+        const res = await fetch(`${API}/api/visitor-log`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            consent: true,
+            page: location.pathname,
+            referrer: document.referrer || null,
+          }),
+        })
+        if (res.ok) {
+          result.textContent = 'Merci ! Vos informations ont été enregistrées avec votre consentement.'
+        } else {
+          result.style.color = '#fca5a5'
+          result.textContent = 'Une erreur est survenue lors de l\'enregistrement.'
+        }
+      } catch (e) {
+        result.style.color = '#fca5a5'
+        result.textContent = 'Impossible de contacter le serveur.'
+      }
+      document.getElementById('acceptBtn').disabled = true
+      document.getElementById('declineBtn').disabled = true
+    }
+
+    document.getElementById('acceptBtn').addEventListener('click', () => send(true))
+    document.getElementById('declineBtn').addEventListener('click', () => send(false))
+  </script>
+</body>
+</html>

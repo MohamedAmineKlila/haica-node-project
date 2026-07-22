@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HAICA ERD</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f8fafc; margin: 0; padding: 2rem; }
+  h1 { text-align: center; color: #1B3A6B; }
+  .mermaid { display: flex; justify-content: center; }
+</style>
+</head>
+<body>
+<h1>HAICA — Entity Relationship Diagram</h1>
+<div class="mermaid">
+erDiagram
+    User {
+        uuid id PK
+        string name
+        string email UK
+        string password
+        string avatar
+        string status
+        uuid roleId FK
+        datetime lastLoginAt
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Role {
+        uuid id PK
+        string name UK
+        string description
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    Permission {
+        uuid id PK
+        string name UK
+        string description
+        string category
+        boolean used
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    RolePermission {
+        uuid roleId PK_FK
+        uuid permissionId PK_FK
+        datetime createdAt
+    }
+
+    RefreshToken {
+        uuid id PK
+        string token UK
+        uuid userId FK
+        string ip
+        string userAgent
+        datetime expiresAt
+        datetime createdAt
+    }
+
+    AuditLog {
+        uuid id PK
+        string action
+        string details
+        uuid userId FK
+        uuid targetId
+        string targetType
+        string ip
+        datetime createdAt
+    }
+
+    Notification {
+        uuid id PK
+        uuid userId FK
+        string title
+        string message
+        string type
+        boolean read
+        string link
+        datetime createdAt
+    }
+
+    Role ||--o{ User : "has"
+    Role ||--o{ RolePermission : "has"
+    Permission ||--o{ RolePermission : "assigned"
+    User ||--o{ RefreshToken : "owns"
+    User ||--o{ AuditLog : "performs"
+    User ||--o{ Notification : "receives"
+</div>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default', er: { useMaxWidth: false } });</script>
+</body>
+</html>

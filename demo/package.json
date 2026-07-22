@@ -1,0 +1,12 @@
+{
+  "name": "haica-demo-root",
+  "scripts": {
+    "dev": "concurrently -n back,front -c blue,green \"cd backend && npm run dev\" \"cd frontend && npx vite --host\"",
+    "dev:back": "cd backend && npm run dev",
+    "dev:front": "cd frontend && npx vite --host",
+    "start": "cd backend && npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}

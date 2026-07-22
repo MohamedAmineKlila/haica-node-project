@@ -1,0 +1,111 @@
+// HAICA RBAC Platform - Prisma Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  avatar        String?
+  status        String         @default("ACTIVE")
+  roleId        String?
+  role          Role?          @relation(fields: [roleId], references: [id])
+  lastLoginAt   DateTime?
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]     @relation("ActorLogs")
+  notifications Notification[]
+  createdBy     String?
+  updatedBy     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  permissions RolePermission[]
+  users       User[]
+  createdBy   String?
+  updatedBy   String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @default(now())
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  category    String?
+  roles       RolePermission[]
+  createdBy   String?
+  updatedBy   String?
+  used        Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @default(now())
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdBy    String?
+  updatedBy    String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+
+  @@id([roleId, permissionId])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ip        String?
+  userAgent String?
+  expiresAt DateTime
+  createdBy String?
+  updatedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  action     String
+  details    String?
+  userId     String?
+  user       User?    @relation("ActorLogs", fields: [userId], references: [id])
+  targetId   String?
+  targetType String?
+  ip         String?
+  createdBy  String?
+  updatedBy  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("info")
+  read      Boolean  @default(false)
+  link      String?
+  createdBy String?
+  updatedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
