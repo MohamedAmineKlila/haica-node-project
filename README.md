@@ -150,7 +150,7 @@ Then open **http://localhost:5173** in your browser.
 This project was developed during an internship at **HAICA — Haute Autorité Indépendante de la Communication Audiovisuelle**, the independent regulatory authority for audiovisual communication in Tunisia.
 
 **Role:** Full-Stack Developer Intern
-**Duration:** Summer 2025
+**Duration:** Summer 2026
 **Organization:** HAICA, Tunisia
 
 ### Skills Gained
